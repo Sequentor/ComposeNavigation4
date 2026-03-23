@@ -1,15 +1,20 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "ru.altum.composenavigation4"
+    namespace = "ru.altum.composione"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
         }
+    }
+
+    defaultConfig {
+        version = "0.0.2"
+        minSdk = 29
     }
 
     buildTypes {
@@ -31,9 +36,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.animation)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
+    implementation(libs.kotlinx.serialization.json)
 }

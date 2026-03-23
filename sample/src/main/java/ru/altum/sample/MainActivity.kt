@@ -8,30 +8,49 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
-import ru.altum.composenavigationz.NavigationHost
-import ru.altum.sample.ui.theme.ComposeNavigation4Theme
+import ru.altum.composione.Composione
+import ru.altum.composione.navhost.NavHost
+import ru.altum.sample.core.navigation.AppNavigator
+import ru.altum.sample.core.navigation.AppRouter
+import ru.altum.sample.ui.theme.SampleTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var navigator: Navigator
+    lateinit var appNavigator: AppNavigator
+
+    @Inject
+    lateinit var composione: Composione<AppRouter>
+
+    @Inject
+    lateinit var appRouter: AppRouter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComposeNavigation4Theme {
+            SampleTheme {
                 Surface {
-                    NavigationHost(
+                    NavHost(
                         modifier = Modifier
                             .statusBarsPadding()
                             .navigationBarsPadding(),
-                        backStack = navigator.backStack,
-                        onBack = { navigator.onBack() },
+                        backStack = appNavigator.backStack,
+                        onBack = { appRouter.back() },
                     )
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        composione.getNavigatorHolder().setNavigator(appNavigator)
+    }
+
+    override fun onPause() {
+        composione.getNavigatorHolder().removeNavigator()
+        super.onPause()
     }
 }
